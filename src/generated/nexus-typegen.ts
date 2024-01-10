@@ -59,6 +59,11 @@ export interface NexusGenInputs {
     content: string; // String!
     title: string; // String!
   }
+  RegisterInput: { // input type
+    email: string; // String!
+    fullname: string; // String!
+    password: string; // String!
+  }
   UpdatePostInput: { // input type
     content: string; // String!
     id: number; // Int!
@@ -110,6 +115,13 @@ export interface NexusGenObjects {
     node?: NexusGenRootTypes['Post'] | null; // Post
   }
   Query: {};
+  User: { // root type
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    email: string; // String!
+    fullname: string; // String!
+    id: number; // Int!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
 }
 
 export interface NexusGenInterfaces {
@@ -131,6 +143,7 @@ export interface NexusGenFieldTypes {
   Mutation: { // field return type
     createPost: NexusGenRootTypes['Post'] | null; // Post
     deletePost: NexusGenRootTypes['Post'] | null; // Post
+    register: NexusGenRootTypes['User'] | null; // User
     updatePost: NexusGenRootTypes['Post'] | null; // Post
   }
   PageInfo: { // field return type
@@ -160,6 +173,13 @@ export interface NexusGenFieldTypes {
     getPostById: NexusGenRootTypes['Post'] | null; // Post
     posts: NexusGenRootTypes['PostConnection'] | null; // PostConnection
   }
+  User: { // field return type
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    email: string; // String!
+    fullname: string; // String!
+    id: number; // Int!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
   Node: { // field return type
     id: string | null; // ID
   }
@@ -173,6 +193,7 @@ export interface NexusGenFieldTypeNames {
   Mutation: { // field return type name
     createPost: 'Post'
     deletePost: 'Post'
+    register: 'User'
     updatePost: 'Post'
   }
   PageInfo: { // field return type name
@@ -202,6 +223,13 @@ export interface NexusGenFieldTypeNames {
     getPostById: 'Post'
     posts: 'PostConnection'
   }
+  User: { // field return type name
+    createdAt: 'DateTime'
+    email: 'String'
+    fullname: 'String'
+    id: 'Int'
+    updatedAt: 'DateTime'
+  }
   Node: { // field return type name
     id: 'ID'
   }
@@ -214,6 +242,9 @@ export interface NexusGenArgTypes {
     }
     deletePost: { // args
       id: number; // Int!
+    }
+    register: { // args
+      input: NexusGenInputs['RegisterInput']; // RegisterInput!
     }
     updatePost: { // args
       input: NexusGenInputs['UpdatePostInput']; // UpdatePostInput!
