@@ -4,6 +4,7 @@ import { asNexusMethod, connectionPlugin, makeSchema } from "nexus";
 import { validatePlugin } from "nexus-validate";
 
 import * as allTypes from "./schema/index";
+import { join } from "path";
 
 export const schema = makeSchema({
   plugins: [
@@ -15,6 +16,10 @@ export const schema = makeSchema({
   outputs: {
     schema: __dirname + "/../schema.graphql",
     typegen: __dirname + "/generated/nexus-typegen.ts",
+  },
+  contextType: {
+    module: join(__dirname, "./context.ts"),
+    export: "Context",
   },
   types: [
     allTypes,

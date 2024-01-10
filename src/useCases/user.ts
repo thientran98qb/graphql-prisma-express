@@ -6,6 +6,9 @@ export interface IUserUseCase {
   create(
     input: NexusGenInputs["RegisterInput"]
   ): Promise<Omit<NexusGenRootTypes["User"], "password">>;
+  loginUser(
+    input: NexusGenInputs["LoginInput"]
+  ): Promise<NexusGenRootTypes["Auth"]>;
 }
 
 @injectable()
@@ -19,5 +22,11 @@ export default class UserUseCase implements IUserUseCase {
     input: NexusGenInputs["RegisterInput"]
   ): Promise<Omit<NexusGenRootTypes["User"], "password">> {
     return this.UserRepository.createUser(input);
+  }
+
+  async loginUser(
+    input: NexusGenInputs["LoginInput"]
+  ): Promise<NexusGenRootTypes["Auth"]> {
+    return this.UserRepository.loginUser(input);
   }
 }

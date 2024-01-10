@@ -1,4 +1,4 @@
-import { arg, extendType, inputObjectType, nonNull } from "nexus";
+import { arg, extendType, inputObjectType, nonNull, objectType } from "nexus";
 import { userObject } from "../objects";
 import { container } from "tsyringe";
 import { IUserUseCase } from "../../useCases/user";
@@ -18,8 +18,18 @@ export const userMutation = extendType({
         _ctx,
         _info
       ): Promise<Omit<NexusGenRootTypes["User"], "password">> => {
-        const containerKId = container.resolve<IUserUseCase>("UserUseCase");
-        return containerKId.create(args.input);
+        const userUseCase = container.resolve<IUserUseCase>("UserUseCase");
+        return userUseCase.create(args.input);
+      },
+    });
+    t.field("login", {
+      type: authObject,
+      args: {
+        input: nonNull(arg({ type: loginInput })),
+      },
+      resolve: (_parent, args, _ctx, _info) => {
+        const userUseCase = container.resolve<IUserUseCase>("UserUseCase");
+        return userUseCase.loginUser(args.input);
       },
     });
   },
@@ -31,5 +41,21 @@ const registerInput = inputObjectType({
     t.nonNull.string("email");
     t.nonNull.string("password");
     t.nonNull.string("fullname");
+  },
+});
+
+const loginInput = inputObjectType({
+  name: "LoginInput",
+  definition(t) {
+    t.nonNull.string("email");
+    t.nonNull.string("password");
+  },
+});
+
+export const authObject = objectType({
+  name: "Auth",
+  definition(t) {
+    t.field("accessToken", { type: "String" });
+    t.field("user", { type: "User" });
   },
 });

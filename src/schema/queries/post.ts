@@ -6,12 +6,14 @@ import { postObject } from "../objects";
 export const postQuery = extendType({
   type: "Query",
   definition(t) {
-    t.field("getPostById", {
+    t.field("post", {
       type: postObject,
       args: {
         id: nonNull(intArg({ description: "Id by post" })),
       },
-      resolve: (_root, args, _ctx) => {
+      resolve: (_root, args, ctx) => {
+        console.log("-user-", ctx.user);
+
         const postQueryService =
           container.resolve<IPostQueryService>("PostQueryService");
         return postQueryService.findPost(args.id);

@@ -4,6 +4,7 @@
  */
 
 
+import type { Context } from "./../context"
 import type { DateTime } from "luxon"
 import type { core, connectionPluginCore } from "nexus"
 import type { ValidateResolver } from "nexus-validate"
@@ -59,6 +60,10 @@ export interface NexusGenInputs {
     content: string; // String!
     title: string; // String!
   }
+  LoginInput: { // input type
+    email: string; // String!
+    password: string; // String!
+  }
   RegisterInput: { // input type
     email: string; // String!
     fullname: string; // String!
@@ -86,6 +91,10 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  Auth: { // root type
+    accessToken?: string | null; // String
+    user?: NexusGenRootTypes['User'] | null; // User
+  }
   Comment: { // root type
     content?: string | null; // String
     id?: string | null; // ID
@@ -136,6 +145,10 @@ export type NexusGenRootTypes = NexusGenInterfaces & NexusGenObjects
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 
 export interface NexusGenFieldTypes {
+  Auth: { // field return type
+    accessToken: string | null; // String
+    user: NexusGenRootTypes['User'] | null; // User
+  }
   Comment: { // field return type
     content: string | null; // String
     id: string | null; // ID
@@ -143,6 +156,7 @@ export interface NexusGenFieldTypes {
   Mutation: { // field return type
     createPost: NexusGenRootTypes['Post'] | null; // Post
     deletePost: NexusGenRootTypes['Post'] | null; // Post
+    login: NexusGenRootTypes['Auth'] | null; // Auth
     register: NexusGenRootTypes['User'] | null; // User
     updatePost: NexusGenRootTypes['Post'] | null; // Post
   }
@@ -170,7 +184,7 @@ export interface NexusGenFieldTypes {
     node: NexusGenRootTypes['Post'] | null; // Post
   }
   Query: { // field return type
-    getPostById: NexusGenRootTypes['Post'] | null; // Post
+    post: NexusGenRootTypes['Post'] | null; // Post
     posts: NexusGenRootTypes['PostConnection'] | null; // PostConnection
   }
   User: { // field return type
@@ -186,6 +200,10 @@ export interface NexusGenFieldTypes {
 }
 
 export interface NexusGenFieldTypeNames {
+  Auth: { // field return type name
+    accessToken: 'String'
+    user: 'User'
+  }
   Comment: { // field return type name
     content: 'String'
     id: 'ID'
@@ -193,6 +211,7 @@ export interface NexusGenFieldTypeNames {
   Mutation: { // field return type name
     createPost: 'Post'
     deletePost: 'Post'
+    login: 'Auth'
     register: 'User'
     updatePost: 'Post'
   }
@@ -220,7 +239,7 @@ export interface NexusGenFieldTypeNames {
     node: 'Post'
   }
   Query: { // field return type name
-    getPostById: 'Post'
+    post: 'Post'
     posts: 'PostConnection'
   }
   User: { // field return type name
@@ -243,6 +262,9 @@ export interface NexusGenArgTypes {
     deletePost: { // args
       id: number; // Int!
     }
+    login: { // args
+      input: NexusGenInputs['LoginInput']; // LoginInput!
+    }
     register: { // args
       input: NexusGenInputs['RegisterInput']; // RegisterInput!
     }
@@ -251,7 +273,7 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
-    getPostById: { // args
+    post: { // args
       id: number; // Int!
     }
     posts: { // args
@@ -296,7 +318,7 @@ export type NexusGenFeaturesConfig = {
 }
 
 export interface NexusGenTypes {
-  context: any;
+  context: Context;
   inputTypes: NexusGenInputs;
   rootTypes: NexusGenRootTypes;
   inputTypeShapes: NexusGenInputs & NexusGenEnums & NexusGenScalars;

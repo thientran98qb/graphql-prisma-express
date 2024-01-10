@@ -1,17 +1,14 @@
-import { ApolloServer } from "@apollo/server";
+import { ApolloServer } from "apollo-server-express";
 import { PrismaClient } from "@prisma/client";
 import express from "express";
-import http from "http";
-import { expressMiddleware } from "@apollo/server/express4";
-import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import cors from "cors";
 import "reflect-metadata";
 import bodyParser from "body-parser";
 import { schema } from "./schema";
 import { setContainerInjection } from "./tsyringe.config";
+import { context } from "./context";
 
 const app = express();
-const httpServer = http.createServer(app);
 export const prisma = new PrismaClient();
 
 async function main() {
@@ -19,19 +16,26 @@ async function main() {
 
   const server = new ApolloServer({
     schema: schema,
-    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+    context: context(),
+    plugins: [],
     cache: "bounded",
   });
 
   const port = 3003;
 
+  app.use(cors(), bodyParser.json(), express.json());
+  app.use(express.urlencoded({ extended: true }));
+
   await server.start();
 
-  app.use(cors(), bodyParser.json(), expressMiddleware(server));
+  server.applyMiddleware({ app });
 
-  httpServer.listen({ port }, () => {
-    console.log(`🚀 Server is ready at http://127.0.0.1:${port}`);
-  });
+  console.log(`NODE_ENV:${process.env.NODE_ENV}`);
+  console.log(
+    `🚀 Server ready at http://127.0.0.1:${port}${server.graphqlPath}`
+  );
+
+  return app.listen(port);
 }
 
 main()

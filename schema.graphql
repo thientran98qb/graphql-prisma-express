@@ -2,6 +2,11 @@
 ### Do not make changes to this file directly
 
 
+type Auth {
+  accessToken: String
+  user: User
+}
+
 """
 The `BigInt` scalar type represents non-fractional signed whole numeric values.
 """
@@ -28,9 +33,15 @@ A field whose value conforms to the standard internet email address format as sp
 """
 scalar EmailAddress @specifiedBy(url: "https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address")
 
+input LoginInput {
+  email: String!
+  password: String!
+}
+
 type Mutation {
   createPost(input: CreatePostInput!): Post
   deletePost(id: Int!): Post
+  login(input: LoginInput!): Auth
   register(input: RegisterInput!): User
   updatePost(input: UpdatePostInput!): Post
 }
@@ -97,7 +108,7 @@ type PostEdge {
 }
 
 type Query {
-  getPostById(
+  post(
     """Id by post"""
     id: Int!
   ): Post
